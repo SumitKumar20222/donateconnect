@@ -1,0 +1,151 @@
+{% extends 'ngo/base.html' %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<div class="donate-wrapper">
+
+    <div class="donate-box">
+
+        <h2 style="text-align:center;">❤️ Donate Items</h2>
+        <p class="subtitle">Make a difference by donating today</p>
+
+        <!-- 🔥 SINGLE FORM (IMPORTANT) -->
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-row">
+
+                <div class="input-group">
+                   <input type="text" name="name" placeholder=" " required>
+                    <label>Your Name</label>
+                </div>
+
+                <div class="input-group">
+                    <select name="item_type" required>
+                        <option value="" disabled selected></option>
+                        <option>Clothes</option>
+                        <option>Books</option>
+                        <option>Food</option>
+                    </select>
+                    <label>Item Type</label>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="input-group">
+                    <input type="number" name="quantity" required>
+                    <label>Quantity</label>
+                </div>
+
+                <div class="input-group">
+                    <input type="date" name="pickup_date" required>
+                    <label>Pickup Date</label>
+                </div>
+
+            </div>
+
+            <!-- ADDRESS -->
+            <div class="input-group">
+                <textarea name="address" required></textarea>
+                <label>Pickup Address</label>
+            </div>
+
+
+            <div class="form-row">
+
+    <div class="input-group">
+        <input type="text" name="phone" required>
+        <label>Phone Number</label>
+    </div>
+
+    <div class="input-group">
+        <input type="email" name="email">
+        <label>Email (optional)</label>
+    </div>
+
+</div>
+            <!-- 📷 IMAGE -->
+            <div class="input-group">
+                <input type="file" name="image" accept="image/*">
+                <label>Upload Item Image</label>
+            </div>
+
+            <!-- MAP -->
+            <label>📍 Select Location</label>
+
+            <div id="map" style="height: 300px; border-radius: 10px; margin-bottom: 15px;"></div>
+
+            <button type="button" class="btn" onclick="getLocation()">📡 Use My Location</button>
+
+            <p class="location-note">
+                📍 The location may be approximate; please adjust the pin on the map.
+            </p>
+
+            <!-- hidden fields -->
+            <input type="hidden" name="latitude" id="lat">
+            <input type="hidden" name="longitude" id="lng">
+
+            <!-- SUBMIT -->
+            <button type="submit" class="donate-btn">
+                🚀 Submit Donation
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- MAP SCRIPT -->
+<script>
+
+var map = L.map('map').setView([28.6139, 77.2090], 5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+var marker;
+
+// CLICK MAP
+map.on('click', function(e) {
+
+    if (marker) {
+        map.removeLayer(marker);
+    }
+
+    marker = L.marker(e.latlng).addTo(map);
+
+    document.getElementById('lat').value = e.latlng.lat;
+    document.getElementById('lng').value = e.latlng.lng;
+});
+
+// AUTO LOCATION
+function getLocation() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+
+        map.setView([lat, lng], 15);
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker([lat, lng]).addTo(map);
+
+        document.getElementById('lat').value = lat;
+        document.getElementById('lng').value = lng;
+
+    });
+}
+
+</script>
+
+{% endblock %}

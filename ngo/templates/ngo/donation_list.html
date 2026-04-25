@@ -1,0 +1,44 @@
+{% extends 'ngo/base.html' %}
+
+{% block content %}
+
+<h2 style="text-align:center;">All Donations</h2>
+
+<table border="1" style="margin:auto; width:80%; text-align:center;">
+<tr>
+    <th>Name</th>
+    <th>Item</th>
+    <th>Quantity</th>
+    <th>Status</th>
+    <th>Image</th>
+</tr>
+
+{% for d in donations %}
+<tr>
+    <td>{{ d.name }}</td>
+    <td>{{ d.item_type }}</td>
+    <td>{{ d.quantity }}</td>
+    <td>{{ d.status }}</td>
+
+    <td>
+        {% if d.image %}
+            <img src="{{ d.image.url }}" width="100">
+        {% else %}
+            No Image
+        {% endif %}
+    </td>
+
+    <td>
+    <a href="https://www.google.com/maps/dir/?api=1&destination={{ d.latitude }},{{ d.longitude }}" 
+   target="_blank" class="btn">
+   🚗 Navigate
+</a>
+        View Location
+    </a>
+</td>
+</tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}

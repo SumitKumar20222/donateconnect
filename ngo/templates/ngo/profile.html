@@ -1,0 +1,73 @@
+{% extends 'ngo/base.html' %}
+
+{% block content %}
+
+<div class="profile-container">
+
+    <!-- PROFILE HEADER -->
+<div class="profile-card new-profile">
+
+    <div class="avatar-box">
+        <img src="{{ profile.image.url }}" class="avatar">
+    </div>
+
+    <div class="profile-info">
+        <h2>{{ request.user.username }}</h2>
+        <p>{{ request.user.email }}</p>
+
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            <input type="file" name="image" class="file-input">
+            <button type="submit" class="btn">Update Photo</button>
+        </form>
+    </div>
+
+</div>
+
+    <!-- STATS -->
+<div class="profile-stats new-stats">
+
+    <div class="stat-box">
+        <h3>{{ donations|length }}</h3>
+        <p>Donations</p>
+    </div>
+
+    <div class="stat-box">
+        <h3>{{ total_items }}</h3>
+        <p>Items</p>
+    </div>
+
+    <div class="stat-box">
+        <h3>{{ donations|length }}</h3>
+        <p>Impact</p>
+    </div>
+
+</div>
+
+    <!-- RECENT DONATIONS -->
+    <h3 style="margin-top:20px;">Recent Donations</h3>
+
+    <div class="donation-grid">
+
+        {% for d in donations|slice:":4" %}
+        <div class="donation-card">
+
+            {% if d.image %}
+                <img src="{{ d.image.url }}" class="card-img">
+            {% endif %}
+
+            <h4>{{ d.item_type }}</h4>
+            <p>Qty: {{ d.quantity }}</p>
+
+            <span class="status {{ d.status|lower }}">
+                {{ d.status }}
+            </span>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

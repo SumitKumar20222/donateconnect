@@ -1,0 +1,92 @@
+{% extends 'ngo/base.html' %}
+
+{% block content %}
+
+<h2 style="text-align:center;">Admin Dashboard 👨‍💼</h2>
+
+<div id="map" style="height: 400px; margin-bottom:20px;"></div>
+
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Address</th>
+        <th>Image</th>
+        <th>Status</th>
+        <th>Action</th>
+        <th>Assign</th>
+    </tr>
+
+    {% for d in donations %}
+    <tr>
+
+        <td>{{ d.name }}</td>
+        <td>{{ d.item_type }}</td>
+        <td>{{ d.quantity }}</td>
+        <td>{{ d.address }}</td>
+
+        <!-- IMAGE FIX -->
+        <td>
+            {% if d.image %}
+                <img src="{{ d.image.url }}" width="80">
+            {% else %}
+                No Image
+            {% endif %}
+        </td>
+
+        <!-- STATUS -->
+        <td>{{ d.status }}</td>
+
+        <!-- APPROVE / REJECT -->
+        <td>
+            {% if d.status == "Pending" %}
+                <a href="{% url 'approve' d.id %}" class="btn" style="background:green;">✔</a>
+                <a href="{% url 'reject' d.id %}" class="btn" style="background:red;">✖</a>
+            {% endif %}
+        </td>
+
+        <!-- ASSIGN VOLUNTEER -->
+        <td>
+            {% if d.status == "Ready" %}
+            <form method="POST" action="{% url 'assign' d.id %}">
+                {% csrf_token %}
+                <select name="user_id">
+                    {% for u in users %}
+                        <option value="{{ u.id }}">{{ u.username }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Assign</button>
+            </form>
+            {% endif %}
+        </td>
+
+    </tr>
+    {% endfor %}
+
+</table>
+
+
+<!-- MAP -->
+<script>
+var map = L.map('map').setView([28.6139, 77.2090], 5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+{% for d in donations %}
+{% if d.latitude and d.longitude %}
+
+L.marker([{{ d.latitude }}, {{ d.longitude }}]).addTo(map)
+.bindPopup(`
+    <b>{{ d.name }}</b><br>
+    {{ d.item_type }}<br>
+    {{ d.address }}
+`);
+
+{% endif %}
+{% endfor %}
+</script>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'ngo/base.html' %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="hero">
+    <h1>Give Hope, Change Lives ❤️</h1>
+    <p>Your small donation can make a big difference</p>
+    
+{% if user.is_authenticated %}
+    <a href="/donate/" class="btn">Donate Now</a>
+{% else %}
+   <a href="/login/?next=/donate/" class="btn">Donate Now</a>
+{% endif %}
+
+</div>
+
+<!-- FEATURES -->
+<div class="cards">
+
+  <div class="card">
+    <i class="fas fa-truck icon"></i>
+    <h3>Easy Pickup</h3>
+    <p>We collect donations from your doorstep</p>
+</div>
+
+<div class="card">
+    <i class="fas fa-chart-bar icon"></i>
+    <h3>Transparency</h3>
+    <p>Track your donation with proof</p>
+</div>
+
+<div class="card">
+    <i class="fas fa-heart icon"></i>
+    <h3>Help People</h3>
+    <p>Your donation creates real impact</p>
+</div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+    <h2>How It Works</h2>
+
+    <div class="steps">
+
+        <div class="step">
+            <i class="fas fa-hand-holding-heart icon"></i>
+            <h3>Donate</h3>
+            <p>Fill the donation form</p>
+        </div>
+
+        <div class="step">
+            <i class="fas fa-box icon"></i>
+            <h3>Pickup</h3>
+            <p>We collect from your home</p>
+        </div>
+
+        <div class="step">
+            <i class="fas fa-users icon"></i>
+            <h3>Deliver</h3>
+            <p>We distribute to needy people</p>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- IMPACT -->
+<div class="section">
+    <h2>Our Impact 🌍</h2>
+
+    <div class="cards">
+        <div class="card">
+            <h3>100+</h3>
+            <p>Donations Collected</p>
+        </div>
+
+        <div class="card">
+            <h3>50+</h3>
+            <p>Families Helped</p>
+        </div>
+
+        <div class="card">
+            <h3>20+</h3>
+            <p>Active Volunteers</p>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+    <h2>Be the reason someone smiles today 😊</h2>
+
+    {% if user.is_authenticated %}
+        <a href="/donate/" class="btn">Start Donating</a>
+    {% else %}
+        
+    {% endif %}
+</div>
+
+
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}

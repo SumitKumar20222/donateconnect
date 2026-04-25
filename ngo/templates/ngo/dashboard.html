@@ -1,0 +1,91 @@
+{% extends 'ngo/base.html' %}
+
+{% block content %}
+
+
+<div class="dashboard">
+
+    <!-- HEADER -->
+    <div class="dashboard-header">
+        <h2>❤️ My Donations</h2>
+        <p>Track your impact and contribution</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+
+        <div class="stat">
+            <h3>{{ donations|length }}</h3>
+            <p>Total Donations</p>
+        </div>
+
+        <div class="stat">
+            <h3>
+                {% for d in donations %}
+                    {{ d.quantity }}
+                {% endfor %}
+            </h3>
+            <p>Items Donated</p>
+        </div>
+
+        <div class="stat">
+            <h3>{{ donations|length }}</h3>
+            <p>Lives Impacted</p>
+        </div>
+
+    </div>
+
+    <!-- CARDS -->
+    <div class="card-container">
+
+        {% for d in donations %}
+        <div class="card">
+
+            <div class="card-top">
+                <h3>{{ d.item_type }}</h3>
+                <span class="status {{ d.status|lower }}">
+                    {{ d.status }}
+                </span>
+            </div>
+
+            <p class="qty">Qty: {{ d.quantity }}</p>
+
+            {% if d.image %}
+                <img src="{{ d.image.url }}" class="card-img">
+            {% endif %}
+
+            <!-- PROGRESS BAR -->
+            <div class="progress-bar">
+                <div class="progress 
+                    {% if d.status == 'Pending' %}p1
+                    {% elif d.status == 'Picked' %}p2
+                    {% elif d.status == 'Distributed' %}p3
+                    {% endif %}
+                "></div>
+            </div>
+
+            <!-- DISTRIBUTION -->
+            {% if d.status == "Distributed" %}
+            <div class="proof">
+
+                {% for dist in d.distribution_set.all %}
+                    <p>📍 {{ dist.location }}</p>
+
+                    {% if dist.image %}
+                        <img src="{{ dist.image.url }}" class="proof-img">
+                    {% endif %}
+                {% endfor %}
+
+                <p class="impact">❤️ Successfully Delivered</p>
+
+            </div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

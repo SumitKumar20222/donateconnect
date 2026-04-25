@@ -1,0 +1,104 @@
+{% extends 'ngo/base.html' %}
+
+{% block content %}
+
+
+<h2 style="text-align:center;">🚚 Volunteer Dashboard</h2>
+
+<div class="vol-container">
+
+    <!-- 🔥 LEFT: MAP -->
+    <div class="vol-map">
+        <div id="map"></div>
+    </div>
+
+    <!-- 🔥 RIGHT: DONATIONS -->
+    <div class="vol-list">
+
+        {% for d in donations %}
+<div class="vol-card">
+
+    <h3>{{ d.name }}</h3>
+
+    <p><b>Item:</b> {{ d.item_type }}</p>
+    <p><b>Qty:</b> {{ d.quantity }}</p>
+    <p><b>Address:</b> {{ d.address }}</p>
+
+    {% if d.phone %}
+    <div class="action-row">
+        <a href="tel:{{ d.phone }}" class="btn">📞 Call</a>
+        <a href="https://wa.me/{{ d.phone }}" target="_blank" class="btn whatsapp">💬 WhatsApp</a>
+    </div>
+    {% endif %}
+
+    <!-- IMAGE + STATUS -->
+    <div class="image-status">
+        {% if d.image %}
+            <img src="{{ d.image.url }}" class="vol-img">
+        {% endif %}
+
+        <span class="status-badge {{ d.status|lower }}">
+            {{ d.status }}
+        </span>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-row">
+        {% if d.status == "Ready" %}
+            <a href="{% url 'mark_picked' d.id %}" class="btn">✅ Picked</a>
+        {% endif %}
+
+        {% if d.status == "Picked" %}
+            <a href="{% url 'distribute' d.id %}" class="btn">📦 Distribute</a>
+        {% endif %}
+
+        {% if d.latitude and d.longitude %}
+            <a href="https://www.google.com/maps?q={{ d.latitude }},{{ d.longitude }}" target="_blank" class="btn">📍 Maps</a>
+        {% endif %}
+    </div>
+
+    <!-- DISTRIBUTION -->
+    <div class="distribution-box">
+        <h4>📦 Distribution</h4>
+
+        {% for dist in d.distribution_set.all %}
+            <p>📍 {{ dist.location }}</p>
+
+            {% if dist.image %}
+                <img src="{{ dist.image.url }}" class="dist-img">
+            {% endif %}
+        {% empty %}
+            <p class="empty">Not distributed yet</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+        </div>
+        {% empty %}
+            <p>No donations assigned</p>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- 🔥 MAP SCRIPT -->
+<script>
+var map = L.map('map').setView([28.6139, 77.2090], 5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+{% for d in donations %}
+{% if d.latitude and d.longitude %}
+
+L.marker([{{ d.latitude }}, {{ d.longitude }}]).addTo(map)
+.bindPopup("<b>{{ d.name }}</b><br>{{ d.address }}");
+
+{% endif %}
+{% endfor %}
+</script>
+
+{% endblock %}

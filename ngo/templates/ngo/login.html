@@ -1,0 +1,58 @@
+{% extends 'ngo/base.html' %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+
+    <div class="auth-box">
+
+        <h2>Welcome Back</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="text" name="username" placeholder="Username" class="auth-input" required>
+
+         <!-- PASSWORD -->
+<div style="position: relative; margin-bottom:15px;">
+    <input type="password" name="password" id="password" placeholder="Password" class="auth-input" required>
+
+    <span onclick="togglePassword('password')" 
+          style="position:absolute; right:10px; top:10px; cursor:pointer;">
+        👁
+    </span>
+</div>
+
+<!-- CONFIRM PASSWORD -->
+<div style="position: relative; margin-bottom:15px;">
+    <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" class="auth-input" required>
+
+    <span onclick="togglePassword('confirm_password')" 
+          style="position:absolute; right:10px; top:10px; cursor:pointer;">
+        👁
+    </span>
+</div>
+            <button type="submit" class="auth-btn">Login</button>
+        </form>
+
+        <p class="auth-link">
+            Don't have an account? <a href="/register/">Register</a>
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+function togglePassword() {
+    var input = document.getElementById("password");
+
+    if (input.type === "password") {
+        input.type = "text";
+    } else {
+        input.type = "password";
+    }
+}
+</script>
+
+{% endblock %}
