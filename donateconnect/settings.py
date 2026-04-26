@@ -23,7 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@w63oc3)$8mag5^tq*)tp4#iczd&md_-@cxce3v4mcpedr9o3)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+
+import os
+
+DEBUG = os.getenv("DEBUG") == "True"
+
 ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1', 'localhost']
 
 
@@ -37,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ngo',  
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +150,14 @@ STATICFILES_DIRS = [
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+
+import os
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv("CLOUD_NAME"),
+    'API_KEY': os.getenv("API_KEY"),
+    'API_SECRET': os.getenv("API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
