@@ -142,15 +142,13 @@ import os
 
 STATIC_URL = '/static/'
 
-if DEBUG:
-    # 👉 LOCAL (runserver)
-    STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'ngo/static')
-    ]
-else:
-    # 👉 PRODUCTION (Render)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'ngo/static')
+]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 import os
@@ -173,4 +171,3 @@ cloudinary.config(
     api_secret=os.getenv("API_SECRET")
 )
 
-print("STORAGE:", DEFAULT_FILE_STORAGE)
