@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-@w63oc3)$8mag5^tq*)tp4#iczd&md_-@cxce3v4mcpedr9o3)
 
 import os
 
-DEBUG = os.getenv("DEBUG") == "True"
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
 ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1', 'localhost']
 
@@ -140,16 +140,17 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 import os
 
-
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'ngo/static')
-]
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+if DEBUG:
+    # 👉 LOCAL (runserver)
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'ngo/static')
+    ]
+else:
+    # 👉 PRODUCTION (Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 import os
