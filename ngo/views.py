@@ -2,7 +2,6 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from httpcore import request
 from .models import Donation
 
 
@@ -132,12 +131,6 @@ def user_logout(request):
 @login_required
 def dashboard(request):
     donations = Donation.objects.filter(user=request.user)
-    return render(request, 'ngo/dashboard.html', {'donations': donations})
-
-
-@login_required
-def dashboard(request):
-    donations = Donation.objects.filter(user=request.user)
 
     return render(request, 'ngo/dashboard.html', {
         'donations': donations
@@ -179,7 +172,6 @@ def mark_picked(request, donation_id):
 
     return redirect('volunteer_dashboard')
 
-@login_required
 
 @login_required
 def admin_dashboard(request):
