@@ -44,8 +44,8 @@ def donate(request):
             quantity=quantity,
             address=address,
             pickup_date=pickup_date,
-            latitude=latitude,     # 🔥 ADD THIS
-            longitude=longitude,   # 🔥 ADD THIS
+            latitude=latitude,     
+            longitude=longitude,   
             image=image,
             phone=phone,
             email=email
@@ -89,9 +89,9 @@ def register(request):
 
         user = User.objects.create_user(username=username, email=email, password=password)
 
-        login(request, user)  # 🔥 auto login
+        login(request, user)  # auto login
 
-        return redirect('/donate/')  # direct donate page
+        return redirect('/donate/')  # donate page
 
     return render(request, 'ngo/register.html')
 
@@ -106,15 +106,15 @@ def user_login(request):
         if user:
             login(request, user)
 
-            # 🔥 ROLE BASED REDIRECT
+            #  ROLE BASED REDIRECT
             if user.is_staff:
-                return redirect('/admin-dashboard/')   # 👨‍💼 admin
+                return redirect('/admin-dashboard/')   # admin
 
             elif Donation.objects.filter(assigned_to=user).exists():
-                return redirect('/volunteer-dashboard/')  # 🚚 volunteer
+                return redirect('/volunteer-dashboard/')  #volunteer
 
             else:
-                return redirect('/dashboard/')  # 👤 normal user
+                return redirect('/dashboard/')  # normal user
 
         else:
             return render(request, 'ngo/login.html', {'error': 'Invalid credentials'})
@@ -126,7 +126,7 @@ from django.shortcuts import redirect
 
 def user_logout(request):
     logout(request)
-    return redirect('/')   # 👈 home page
+    return redirect('/')   # home page
 
 @login_required
 def dashboard(request):
@@ -165,7 +165,7 @@ from django.shortcuts import get_object_or_404
 def mark_picked(request, donation_id):
     donation = get_object_or_404(Donation, id=donation_id)
 
-    # security: sirf assigned volunteer hi change kare
+    # security: only assigned volunteer can mark as picked
     if donation.assigned_to == request.user:
         donation.status = "Picked"
         donation.save()
@@ -179,7 +179,7 @@ def admin_dashboard(request):
         return redirect('/')
 
     donations = Donation.objects.all()
-    users = User.objects.all()   # 🔥 ADD THIS
+    users = User.objects.all()   
 
     return render(request, 'ngo/admin_dashboard.html', {
         'donations': donations,
@@ -261,12 +261,62 @@ def distribute(request, donation_id):
             image=image
         )
 
-        # 🔥 STATUS UPDATE
+        # STATUS UPDATE
         donation.status = "Distributed"
         donation.save()
 
         return redirect('volunteer_dashboard')
 
     return render(request, 'ngo/distribute.html', {'donation': donation})
+
+
+
+from supabase import create_client
+from django.conf import settings
+
+def donate(request):
+
+    supabase = create_client(
+        settings.SUPABASE_URL,
+        settings.SUPABASE_KEY
+    )
+
+    if request.method == "POST":
+        file = request.FILES.get("image")
+
+        image_url = None
+
+        if file:
+            file_path = f"donations/{file.name}"
+
+            supabase.storage.from_("media").upload(file_path, file.read())
+
+            image_url = supabase.storage.from_("media").get_public_url(file_path)
+
+
+
+def donate(request):
+    if request.method == "POST":
+        file = request.FILES.get("image")
+
+        image_url = None
+
+        if file:
+            file_path = f"donations/{file.name}"
+
+            supabase.storage.from_("media").upload(file_path, file.read())
+
+            image_url = supabase.storage.from_("media").get_public_url(file_path)
+
+        Donation.objects.create(
+            user=request.user,
+            name=request.POST.get("name"),
+            item_type=request.POST.get("item_type"),
+            quantity=request.POST.get("quantity"),
+            address=request.POST.get("address"),
+            image=image_url
+        )
+
+        return redirect('success')
     
    

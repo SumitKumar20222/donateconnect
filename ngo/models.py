@@ -5,12 +5,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-# =========================
+
 # DONATION MODEL
-# =========================
+
 class Donation(models.Model):
 
-    # 👤 Donor
+    # Donor
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -18,7 +18,7 @@ class Donation(models.Model):
         related_name='donations'
     )
 
-    # 🚚 Volunteer
+    # Volunteer
     assigned_to = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -62,9 +62,9 @@ class Donation(models.Model):
         return self.name
 
 
-# =========================
+
 # PROFILE MODEL
-# =========================
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='profiles/', default='profiles/default.png')
@@ -73,25 +73,25 @@ class Profile(models.Model):
         return self.user.username
 
 
-# =========================
+
 # AUTO CREATE PROFILE
-# =========================
+
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
 
 
-# =========================
+
 # DISTRIBUTION MODEL
-# =========================
+
 class Distribution(models.Model):
     donation = models.ForeignKey(Donation, on_delete=models.CASCADE)
     location = models.CharField(max_length=200)
     date = models.DateField(auto_now_add=True)
     notes = models.TextField(blank=True)
 
-    image = models.ImageField(upload_to='distribution/', null=True, blank=True)
+    image = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.donation.name} - Distributed"

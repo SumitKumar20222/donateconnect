@@ -1168,3 +1168,43 @@ h2, h3 {
 .empty {
     color: gray;
 }
+
+.action-box {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-nav {
+    background: linear-gradient(45deg, #ff416c, #ff4b2b);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn-view {
+    color: #333;
+    text-decoration: underline;
+}
+
+.success-container {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #fff5f5, #ffe6e6);
+}
+
+.home-btn {
+    margin-top: 20px;
+    background: green;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}

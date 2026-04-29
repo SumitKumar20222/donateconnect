@@ -28,15 +28,20 @@
         {% endif %}
     </td>
 
-    <td>
-    <a href="https://www.google.com/maps/dir/?api=1&destination={{ d.latitude }},{{ d.longitude }}" 
-   target="_blank" class="btn">
-   🚗 Navigate
-</a>
-        View Location
-    </a>
+<td>
+    <div class="action-box">
+        <a href="https://www.google.com/maps/dir/?api=1&destination={{ d.latitude }},{{ d.longitude }}" 
+           target="_blank" class="btn-nav">
+           🚗 Navigate
+        </a>
+
+        <a href="https://www.google.com/maps?q={{ d.latitude }},{{ d.longitude }}" 
+           target="_blank" class="btn-view">
+           📍 View Location
+        </a>
+    </div>
 </td>
-</tr>
+
 {% endfor %}
 
 </table>
