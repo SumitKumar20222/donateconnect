@@ -270,9 +270,11 @@ def distribute(request, donation_id):
     return render(request, 'ngo/distribute.html', {'donation': donation})
 
 
-
 from supabase import create_client
 from django.conf import settings
+from django.shortcuts import render, redirect
+from .models import Donation
+
 
 def donate(request):
 
@@ -282,31 +284,20 @@ def donate(request):
     )
 
     if request.method == "POST":
-        file = request.FILES.get("image")
 
+        file = request.FILES.get("image")
         image_url = None
 
         if file:
-            file_path = f"donations/{file.name}"
+            try:
+                file_path = f"donations/{file.name}"
 
-            supabase.storage.from_("media").upload(file_path, file.read())
+                supabase.storage.from_("media").upload(file_path, file.read())
 
-            image_url = supabase.storage.from_("media").get_public_url(file_path)
+                image_url = supabase.storage.from_("media").get_public_url(file_path)
 
-
-
-def donate(request):
-    if request.method == "POST":
-        file = request.FILES.get("image")
-
-        image_url = None
-
-        if file:
-            file_path = f"donations/{file.name}"
-
-            supabase.storage.from_("media").upload(file_path, file.read())
-
-            image_url = supabase.storage.from_("media").get_public_url(file_path)
+            except Exception as e:
+                print("UPLOAD ERROR:", e)
 
         Donation.objects.create(
             user=request.user,
@@ -318,5 +309,5 @@ def donate(request):
         )
 
         return redirect('success')
-    
-   
+
+    return render(request, 'ngo/donate.html')
