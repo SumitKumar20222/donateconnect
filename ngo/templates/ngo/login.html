@@ -8,6 +8,14 @@
 
         <h2>Welcome Back</h2>
 
+
+        {% if messages %}
+    {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+    {% endfor %}
+   {% endif %}
+
+
         <form method="POST">
             {% csrf_token %}
 
@@ -18,16 +26,6 @@
     <input type="password" name="password" id="password" placeholder="Password" class="auth-input" required>
 
     <span onclick="togglePassword('password')" 
-          style="position:absolute; right:10px; top:10px; cursor:pointer;">
-        👁
-    </span>
-</div>
-
-<!-- CONFIRM PASSWORD -->
-<div style="position: relative; margin-bottom:15px;">
-    <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" class="auth-input" required>
-
-    <span onclick="togglePassword('confirm_password')" 
           style="position:absolute; right:10px; top:10px; cursor:pointer;">
         👁
     </span>

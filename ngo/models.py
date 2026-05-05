@@ -91,7 +91,7 @@ class Distribution(models.Model):
     date = models.DateField(auto_now_add=True)
     notes = models.TextField(blank=True)
 
-    image = models.URLField(null=True, blank=True)
+    image = models.ImageField(upload_to='distribution/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.donation.name} - Distributed"

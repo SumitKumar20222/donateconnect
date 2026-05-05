@@ -1,3 +1,5 @@
+from django.contrib import messages
+
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -98,26 +100,16 @@ def register(request):
 from django.contrib.auth import authenticate, login
 def user_login(request):
     if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
         user = authenticate(request, username=username, password=password)
 
-        if user:
+        if user is not None:
             login(request, user)
-
-            #  ROLE BASED REDIRECT
-            if user.is_staff:
-                return redirect('/admin-dashboard/')   # admin
-
-            elif Donation.objects.filter(assigned_to=user).exists():
-                return redirect('/volunteer-dashboard/')  #volunteer
-
-            else:
-                return redirect('/dashboard/')  # normal user
-
+            return redirect('dashboard')
         else:
-            return render(request, 'ngo/login.html', {'error': 'Invalid credentials'})
+            messages.error(request, "❌ Invalid username or password")
 
     return render(request, 'ngo/login.html')
 

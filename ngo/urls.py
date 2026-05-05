@@ -38,3 +38,4 @@ path('distribute/<int:donation_id>/', views.distribute, name='distribute'),
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
